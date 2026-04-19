@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="assets/css/themes.css" />
   <link rel="stylesheet" href="assets/css/tools/grammar.css" />
   <link rel="stylesheet" href="assets/css/tools/translator.css" />
+  <link rel="stylesheet" href="assets/css/tools/writing.css" />
   <link rel="stylesheet" href="assets/css/tools/settings.css" />
   <link rel="icon" href="assets/img/logo.png" />
   <!-- Settings applies theme/lang BEFORE first paint -->
@@ -27,17 +28,21 @@
   <!-- Mobile top bar (visible <=900px) -->
   <header class="mobile-topbar" aria-hidden="false">
     <button class="mt-menu" id="mt-menu" type="button" aria-label="Open menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 6h18M3 12h18M3 18h18"/>
-      </svg>
+      <span class="mt-menu-icon" aria-hidden="true">
+        <i></i><i></i><i></i>
+      </span>
     </button>
     <div class="mt-brand">
-      <img src="assets/img/logo.png" alt="" />
-      <span class="mt-brand-name">Grammino</span>
+      <img src="assets/img/logo.png" alt="Grammino" />
     </div>
   </header>
 
   <div class="layout" id="layout">
+
+    <!-- Floating reopen button (desktop, visible when sidebar is closed) -->
+    <button class="desktop-menu" id="desktop-menu-btn" type="button" aria-label="Open menu">
+      <span class="mt-menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
 
     <!-- Drawer backdrop (mobile) -->
     <div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true"></div>
@@ -50,7 +55,6 @@
         </button>
         <div class="brand-mini">
           <img src="assets/img/logo.png" alt="Grammino" class="brand-logo" />
-          <span class="brand-name">Grammino</span>
         </div>
       </div>
 
@@ -144,11 +148,9 @@
       <section class="page page-home active" data-page="home">
         <div class="welcome">
           <p class="welcome-greet" id="welcome-greet">Good day</p>
-          <div class="welcome-logo">
-            <span class="halo"></span>
-            <img src="assets/img/logo.png" alt="Grammino" />
-          </div>
-          <h1 class="welcome-title">Grammino</h1>
+          <h1 class="gm-wordmark" aria-label="Grammino">
+            <span>G</span><span>r</span><span>a</span><span>m</span><span>m</span><span>i</span><span>n</span><span>o</span>
+          </h1>
           <p class="welcome-sub" data-i18n="tagline">All in one English tools app</p>
 
           <div class="welcome-chips">
@@ -339,7 +341,7 @@
         </div>
       </section>
 
-      <!-- Writing AI -->
+      <!-- Writing AI — IELTS evaluator -->
       <section class="page" data-page="writing">
         <div class="page-head">
           <div class="page-ico ico-writing">
@@ -350,12 +352,44 @@
           </div>
           <div>
             <h2 data-i18n="writing">Writing AI</h2>
-            <p>Draft essays, emails, and posts with AI.</p>
+            <p>Write your essay — get IELTS band, errors &amp; personalised feedback.</p>
           </div>
         </div>
-        <div class="page-body">
-          <textarea class="tool-input" placeholder="Describe what you want to write..."></textarea>
-          <button class="tool-cta">Generate</button>
+
+        <div class="page-body wr-wrap">
+          <!-- Task type -->
+          <div class="wr-types" id="wr-types" role="tablist" aria-label="Task type">
+            <button class="wr-type active" type="button" data-type="task2">Task 2 · Essay</button>
+            <button class="wr-type" type="button" data-type="task1a">Task 1 · Academic</button>
+            <button class="wr-type" type="button" data-type="task1g">Task 1 · General</button>
+            <button class="wr-type" type="button" data-type="free">Free writing</button>
+          </div>
+
+          <!-- Optional prompt -->
+          <textarea id="wr-prompt" class="wr-prompt"
+            placeholder="Topic / question (optional) — e.g. 'Some people think universities should focus only on job-related skills…'"></textarea>
+
+          <!-- User's writing -->
+          <textarea id="wr-text" class="tool-input wr-text"
+            placeholder="Paste or type your writing here…"></textarea>
+
+          <!-- Counter + Evaluate -->
+          <div class="wr-bar">
+            <span class="wr-count" id="wr-count">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+              <span><strong id="wr-count-val">0</strong> words <span id="wr-count-tgt">/ 250</span></span>
+            </span>
+            <button id="wr-go" class="wr-go" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>
+              </svg>
+              <span>Baholash</span>
+            </button>
+          </div>
+          <p class="wr-status" id="wr-status" aria-live="polite"></p>
+
+          <!-- Results -->
+          <div class="wr-results" id="wr-results" aria-live="polite"></div>
         </div>
       </section>
 
@@ -505,6 +539,7 @@
   <script src="assets/js/home.js"></script>
   <script src="assets/js/tools/grammar.js"></script>
   <script src="assets/js/tools/translator.js"></script>
+  <script src="assets/js/tools/writing.js"></script>
   <script src="assets/js/tools/settings.js"></script>
 </body>
 </html>

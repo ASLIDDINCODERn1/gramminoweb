@@ -4,6 +4,7 @@
   const layout = document.getElementById("layout");
   const menuBtn = document.getElementById("menu-btn");
   const mobileMenuBtn = document.getElementById("mt-menu");
+  const desktopMenuBtn = document.getElementById("desktop-menu-btn");
   const drawerBackdrop = document.getElementById("drawer-backdrop");
   const greetEl = document.getElementById("welcome-greet");
 
@@ -45,6 +46,14 @@
     mobileMenuBtn.addEventListener("click", () => {
       if (layout.classList.contains("drawer-open")) closeDrawer();
       else openDrawer();
+    });
+  }
+
+  // Desktop floating reopen button (visible only when sidebar is collapsed on desktop)
+  if (desktopMenuBtn) {
+    desktopMenuBtn.addEventListener("click", () => {
+      layout.classList.remove("collapsed");
+      menuBtn && menuBtn.setAttribute("aria-expanded", "true");
     });
   }
 

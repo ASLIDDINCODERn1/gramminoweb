@@ -62,7 +62,7 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
   transition: grid-template-columns .4s cubic-bezier(.2,.85,.2,1);
 }
 .layout.collapsed {
-  grid-template-columns: var(--sidebar-w-collapsed) 1fr;
+  grid-template-columns: 0 1fr;
 }
 
 /* Sidebar */
@@ -79,6 +79,48 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
   -webkit-backdrop-filter: blur(22px) saturate(160%);
   overflow: hidden;
   z-index: 5;
+  transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+}
+.layout.collapsed .sidebar {
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Floating reopen button (desktop only) */
+.desktop-menu {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 46px; height: 46px;
+  display: inline-grid;
+  place-items: center;
+  background: linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  color: #fff;
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.2),
+    0 10px 24px -10px rgba(61,110,255,.55);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-18px) scale(.9);
+  transition: opacity .3s ease, transform .38s cubic-bezier(.22,1,.36,1), background .2s ease, border-color .2s ease;
+  z-index: 20;
+  cursor: pointer;
+}
+.desktop-menu:hover {
+  background: linear-gradient(145deg, rgba(106,168,255,.25), rgba(61,110,255,.12));
+  border-color: rgba(106,168,255,.4);
+}
+.desktop-menu:active { transform: translateX(0) scale(.92); }
+.layout.collapsed .desktop-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0) scale(1);
+  transition-delay: .15s;
 }
 
 .sidebar-head {
@@ -433,8 +475,92 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
 .tool-cta:active { transform: translateY(1px); }
 .tool-cta.big { padding: 16px 28px; font-size: 16px; border-radius: 14px; }
 
+/* ---------- Grammino wordmark (welcome) ---------- */
+.gm-wordmark {
+  margin: 0 auto 22px;
+  display: inline-flex;
+  gap: 2px;
+  font-size: clamp(54px, 9vw, 96px);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  position: relative;
+  filter: drop-shadow(0 10px 30px rgba(61,110,255,.4));
+}
+.gm-wordmark span {
+  display: inline-block;
+  color: #fff;
+  background: linear-gradient(180deg, #ffffff 0%, #cfe0ff 55%, #6aa8ff 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  transform: translateY(22px);
+  animation: gmLetterIn .7s cubic-bezier(.2,.85,.2,1) forwards;
+}
+.gm-wordmark span:nth-child(1) { animation-delay: .10s; }
+.gm-wordmark span:nth-child(2) { animation-delay: .16s; }
+.gm-wordmark span:nth-child(3) { animation-delay: .22s; }
+.gm-wordmark span:nth-child(4) { animation-delay: .28s; }
+.gm-wordmark span:nth-child(5) { animation-delay: .34s; }
+.gm-wordmark span:nth-child(6) { animation-delay: .40s; }
+.gm-wordmark span:nth-child(7) { animation-delay: .46s; }
+.gm-wordmark span:nth-child(8) { animation-delay: .52s; }
+@keyframes gmLetterIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+/* Decorative aura behind the wordmark */
+.gm-wordmark {
+  isolation: isolate;
+}
+.gm-wordmark::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 130%; height: 280%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(61,110,255,.38), rgba(139,92,246,.18) 55%, transparent 75%);
+  filter: blur(30px);
+  z-index: -1;
+  pointer-events: none;
+  animation: gmHalo 6s ease-in-out infinite;
+}
+@keyframes gmHalo {
+  0%,100% { opacity: .55; transform: translate(-50%, -50%) scale(1); }
+  50%     { opacity: .9;  transform: translate(-50%, -50%) scale(1.06); }
+}
+@supports not (-webkit-background-clip: text) {
+  .gm-wordmark span { -webkit-text-fill-color: #fff; color: #fff; }
+}
+
 /* ---------- Mobile topbar (hidden on desktop) ---------- */
 .mobile-topbar { display: none; }
+
+/* ---------- Modern morphing menu icon ---------- */
+.mt-menu-icon {
+  position: relative;
+  display: inline-block;
+  width: 22px; height: 18px;
+}
+.mt-menu-icon i {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition:
+    transform .35s cubic-bezier(.65,.05,.35,1),
+    width .35s cubic-bezier(.65,.05,.35,1),
+    opacity .25s ease,
+    top .35s cubic-bezier(.65,.05,.35,1);
+}
+.mt-menu-icon i:nth-child(1) { top: 2px;  width: 70%; }
+.mt-menu-icon i:nth-child(2) { top: 8px;  width: 100%; }
+.mt-menu-icon i:nth-child(3) { top: 14px; width: 45%; left: auto; right: 0; }
+/* Morph to X when drawer is open */
+.layout.drawer-open .mt-menu-icon i:nth-child(1) { top: 8px; width: 100%; transform: rotate(45deg); }
+.layout.drawer-open .mt-menu-icon i:nth-child(2) { opacity: 0; transform: translateX(-8px); }
+.layout.drawer-open .mt-menu-icon i:nth-child(3) { top: 8px; width: 100%; transform: rotate(-45deg); right: 0; }
 
 /* Drawer backdrop (mobile only, visible when drawer-open) */
 .drawer-backdrop {
@@ -469,14 +595,35 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
     top: 0; left: 0;
     width: min(var(--sidebar-w), 86vw);
     height: 100dvh;
-    padding: calc(16px + env(safe-area-inset-top, 0px)) 14px 16px;
-    transform: translateX(-100%);
-    transition: transform .32s cubic-bezier(.2,.85,.2,1);
-    box-shadow: 24px 0 60px -10px rgba(0,8,40,.7);
+    padding: calc(18px + env(safe-area-inset-top, 0px)) 14px 18px;
+    transform: translateX(-102%);
+    transition: transform .42s cubic-bezier(.22,1,.36,1);
+    box-shadow: 30px 0 80px -10px rgba(0,8,40,.75);
     z-index: 50;
     border-right: 1px solid var(--glass-border);
+    background: linear-gradient(180deg, rgba(16,30,85,.92), rgba(7,11,30,.96));
   }
   .layout.drawer-open .sidebar { transform: translateX(0); }
+
+  /* Stagger tool-link entrance when drawer opens */
+  .sidebar .tool-link,
+  .sidebar .foot-link {
+    opacity: 0;
+    transform: translateX(-18px);
+    transition: opacity .35s ease, transform .45s cubic-bezier(.22,1,.36,1);
+  }
+  .layout.drawer-open .sidebar .tool-link,
+  .layout.drawer-open .sidebar .foot-link {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .layout.drawer-open .sidebar .tool-link:nth-child(1) { transition-delay: .08s; }
+  .layout.drawer-open .sidebar .tool-link:nth-child(2) { transition-delay: .14s; }
+  .layout.drawer-open .sidebar .tool-link:nth-child(3) { transition-delay: .20s; }
+  .layout.drawer-open .sidebar .tool-link:nth-child(4) { transition-delay: .26s; }
+  .layout.drawer-open .sidebar .tool-link:nth-child(5),
+  .layout.drawer-open .sidebar .tool-link:nth-child(6) { transition-delay: .32s; }
+  .layout.drawer-open .sidebar .foot-link { transition-delay: .38s; }
 
   /* Hamburger inside sidebar head becomes a close button visually (still toggles) */
   .sidebar-head { padding-top: 4px; }
@@ -502,17 +649,24 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
     z-index: 30;
   }
   .mt-menu {
-    width: 42px; height: 42px;
+    width: 44px; height: 44px;
     flex: none;
     display: inline-grid;
     place-items: center;
-    background: rgba(255,255,255,0.06);
+    background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border-radius: 14px;
     color: #fff;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.18),
+      0 8px 18px -10px rgba(61,110,255,.55);
+    transition: transform .18s ease, background .2s ease, border-color .2s ease;
   }
-  .mt-menu:active { transform: scale(.94); }
-  .mt-menu svg { width: 22px; height: 22px; }
+  .mt-menu:hover {
+    background: linear-gradient(145deg, rgba(106,168,255,.22), rgba(61,110,255,.12));
+    border-color: rgba(106,168,255,.35);
+  }
+  .mt-menu:active { transform: scale(.92); }
   .mt-brand {
     display: inline-flex;
     align-items: center;
@@ -589,6 +743,11 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
 /* Hide mobile topbar on desktop */
 @media (min-width: 901px) {
   .mobile-topbar, .drawer-backdrop { display: none !important; }
+}
+
+/* Hide desktop floating button on mobile (mobile uses its own topbar) */
+@media (max-width: 900px) {
+  .desktop-menu { display: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
