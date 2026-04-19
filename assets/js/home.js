@@ -126,4 +126,18 @@
   }
   // Refresh every 10 minutes so the phrase rolls over naturally
   setInterval(updateGreet, 10 * 60 * 1000);
+
+  // ---------- Sign out ----------
+  const signoutBtn = document.getElementById("signout-btn");
+  if (signoutBtn) {
+    signoutBtn.addEventListener("click", async () => {
+      signoutBtn.disabled = true;
+      try {
+        if (window.GramminoAuth && window.GramminoAuth.signOut) {
+          await window.GramminoAuth.signOut();
+        }
+      } catch (_) { /* redirect anyway */ }
+      window.location.replace("login.html");
+    });
+  }
 })();

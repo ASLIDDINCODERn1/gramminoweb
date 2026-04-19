@@ -438,3 +438,25 @@ html, body {
   .blob, .shine, .btn-liquid { animation: none; }
   .auth-wrap { animation: none; }
 }
+
+/* Auth error banner — shown after a failed Firebase sign-in/sign-up. */
+.auth-error {
+  margin: 4px 0 0;
+  padding: 0 14px;
+  max-height: 0;
+  overflow: hidden;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #fecdd3;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0);
+  border-radius: 12px;
+  opacity: 0;
+  transition: max-height .25s ease, padding .25s ease, opacity .2s ease, border-color .2s ease;
+}
+.auth-error.show {
+  padding: 10px 14px;
+  max-height: 160px;
+  opacity: 1;
+  border-color: rgba(239, 68, 68, 0.4);
+}
