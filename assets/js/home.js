@@ -1,0 +1,75 @@
+(function () {
+  "use strict";
+
+  const layout = document.getElementById("layout");
+  const menuBtn = document.getElementById("menu-btn");
+  const greetEl = document.getElementById("welcome-greet");
+
+  // Start collapsed on small screens
+  if (window.matchMedia("(max-width: 760px)").matches) {
+    layout.classList.add("collapsed");
+  }
+
+  menuBtn.addEventListener("click", () => {
+    layout.classList.toggle("collapsed");
+    menuBtn.setAttribute(
+      "aria-expanded",
+      layout.classList.contains("collapsed") ? "false" : "true"
+    );
+  });
+
+  // Tool navigation: swap active page in main
+  const toolLinks = document.querySelectorAll(".tool-link");
+  const pages = document.querySelectorAll(".page");
+
+  function showPage(name) {
+    pages.forEach((p) => p.classList.toggle("active", p.dataset.page === name));
+    toolLinks.forEach((l) =>
+      l.classList.toggle("active", l.dataset.tool === name)
+    );
+  }
+
+  toolLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      showPage(link.dataset.tool);
+      if (window.matchMedia("(max-width: 760px)").matches) {
+        layout.classList.add("collapsed");
+      }
+    });
+  });
+
+  // Clicking the logo area (brand) returns to welcome
+  const brand = document.querySelector(".brand-mini");
+  if (brand) {
+    brand.style.cursor = "pointer";
+    brand.addEventListener("click", () => {
+      showPage("home");
+    });
+  }
+
+  // ---------- Time-based greeting (localized via Settings) ----------
+  function greetKey() {
+    const h = new Date().getHours();
+    if (h >= 5  && h < 12) return "welcome_greet_morning";
+    if (h >= 12 && h < 17) return "welcome_greet_afternoon";
+    if (h >= 17 && h < 22) return "welcome_greet_evening";
+    return "welcome_greet_night";
+  }
+
+  function updateGreet() {
+    if (!greetEl) return;
+    const key = greetKey();
+    const text = (window.Settings && window.Settings.t)
+      ? window.Settings.t(key)
+      : "Good day";
+    greetEl.textContent = text;
+  }
+
+  updateGreet();
+  // Re-localize when language/settings change
+  if (window.Settings && window.Settings.onChange) {
+    window.Settings.onChange(updateGreet);
+  }
+  // Refresh every 10 minutes so the phrase rolls over naturally
+  setInterval(updateGreet, 10 * 60 * 1000);
+})();
