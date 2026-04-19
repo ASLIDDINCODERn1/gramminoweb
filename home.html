@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#070b1e" />
   <title>Grammino — All language tools in one place</title>
   <meta name="description" content="Grammino: Grammar AI, Translator, Speaking AI, Writing AI — all in one place." />
   <link rel="stylesheet" href="assets/css/home.css" />
@@ -23,7 +24,23 @@
     <div class="blob blob-3"></div>
   </div>
 
+  <!-- Mobile top bar (visible <=900px) -->
+  <header class="mobile-topbar" aria-hidden="false">
+    <button class="mt-menu" id="mt-menu" type="button" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+    </button>
+    <div class="mt-brand">
+      <img src="assets/img/logo.png" alt="" />
+      <span class="mt-brand-name">Grammino</span>
+    </div>
+  </header>
+
   <div class="layout" id="layout">
+
+    <!-- Drawer backdrop (mobile) -->
+    <div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true"></div>
 
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">

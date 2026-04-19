@@ -266,3 +266,28 @@
   font-size: 11px;
   font-family: inherit;
 }
+
+/* Mobile tweaks */
+@media (max-width: 900px) {
+  .page-chat.active { min-height: calc(100dvh - 130px); }
+  .page-chat .page-head { flex-wrap: wrap; }
+  .chat-new {
+    padding: 9px 12px;
+    font-size: 13px;
+    margin-left: auto;
+  }
+  .chat-new span { display: none; }
+  .chat-new svg { width: 18px; height: 18px; }
+  .chat-empty { padding: 24px 12px; }
+  .chat-empty-ico { width: 56px; height: 56px; border-radius: 16px; margin-bottom: 12px; }
+  .chat-empty-ico svg { width: 26px; height: 26px; }
+  .chat-empty h3 { font-size: 18px; }
+  .chat-empty p  { font-size: 13.5px; }
+  .msg { gap: 10px; }
+  .msg-avatar { width: 32px; height: 32px; border-radius: 9px; }
+  .msg-body { padding: 12px 14px; font-size: 14.5px; }
+  .chat-input { padding: 8px; border-radius: 16px; }
+  .chat-text { font-size: 16px; padding: 10px; } /* 16px avoids iOS zoom */
+  .chat-send { width: 42px; height: 42px; }
+  .chat-hint { font-size: 11px; }
+}

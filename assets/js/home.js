@@ -3,19 +3,66 @@
 
   const layout = document.getElementById("layout");
   const menuBtn = document.getElementById("menu-btn");
+  const mobileMenuBtn = document.getElementById("mt-menu");
+  const drawerBackdrop = document.getElementById("drawer-backdrop");
   const greetEl = document.getElementById("welcome-greet");
 
-  // Start collapsed on small screens
-  if (window.matchMedia("(max-width: 760px)").matches) {
-    layout.classList.add("collapsed");
+  const mobileMQ = window.matchMedia("(max-width: 900px)");
+
+  function isMobile() { return mobileMQ.matches; }
+
+  // Start collapsed on small screens (desktop collapse only)
+  if (!isMobile()) {
+    // desktop default: expanded
   }
 
+  function openDrawer() {
+    layout.classList.add("drawer-open");
+    mobileMenuBtn && mobileMenuBtn.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  }
+  function closeDrawer() {
+    layout.classList.remove("drawer-open");
+    mobileMenuBtn && mobileMenuBtn.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
+
+  // Sidebar internal hamburger: on desktop it collapses; on mobile it closes drawer
   menuBtn.addEventListener("click", () => {
-    layout.classList.toggle("collapsed");
-    menuBtn.setAttribute(
-      "aria-expanded",
-      layout.classList.contains("collapsed") ? "false" : "true"
-    );
+    if (isMobile()) {
+      closeDrawer();
+    } else {
+      layout.classList.toggle("collapsed");
+      menuBtn.setAttribute(
+        "aria-expanded",
+        layout.classList.contains("collapsed") ? "false" : "true"
+      );
+    }
+  });
+
+  // Mobile top-bar hamburger opens the drawer
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener("click", () => {
+      if (layout.classList.contains("drawer-open")) closeDrawer();
+      else openDrawer();
+    });
+  }
+
+  // Backdrop click closes drawer
+  if (drawerBackdrop) {
+    drawerBackdrop.addEventListener("click", closeDrawer);
+  }
+
+  // Escape key closes drawer
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && layout.classList.contains("drawer-open")) {
+      closeDrawer();
+    }
+  });
+
+  // Reset drawer state when crossing the breakpoint
+  mobileMQ.addEventListener("change", () => {
+    closeDrawer();
   });
 
   // Tool navigation: swap active page in main
@@ -32,9 +79,7 @@
   toolLinks.forEach((link) => {
     link.addEventListener("click", () => {
       showPage(link.dataset.tool);
-      if (window.matchMedia("(max-width: 760px)").matches) {
-        layout.classList.add("collapsed");
-      }
+      if (isMobile()) closeDrawer();
     });
   });
 

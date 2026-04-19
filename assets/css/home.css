@@ -24,6 +24,12 @@ html, body {
   color: var(--text);
   background: radial-gradient(ellipse at top, #0e1a47 0%, #070b1e 55%, #05081a 100%);
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+/* Keep inputs at 16px to avoid iOS zoom-on-focus */
+@supports (-webkit-touch-callout: none) {
+  input, textarea, select { font-size: 16px; }
 }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; border: 0; background: transparent; color: inherit; }
@@ -427,19 +433,164 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
 .tool-cta:active { transform: translateY(1px); }
 .tool-cta.big { padding: 16px 28px; font-size: 16px; border-radius: 14px; }
 
-/* Responsive */
-@media (max-width: 760px) {
-  :root { --sidebar-w: 240px; }
-  .layout { grid-template-columns: var(--sidebar-w-collapsed) 1fr; }
-  .layout:not(.collapsed) .sidebar {
-    position: fixed;
-    width: var(--sidebar-w);
-    box-shadow: 20px 0 60px -10px rgba(0,8,40,.6);
-  }
-  .layout.collapsed { grid-template-columns: var(--sidebar-w-collapsed) 1fr; }
-  .main { padding: 24px 18px; }
-  .welcome-logo { width: 140px; height: 140px; }
+/* ---------- Mobile topbar (hidden on desktop) ---------- */
+.mobile-topbar { display: none; }
+
+/* Drawer backdrop (mobile only, visible when drawer-open) */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 5, 20, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease;
+  z-index: 40;
 }
+.layout.drawer-open .drawer-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  :root { --sidebar-w: 300px; }
+
+  /* Single-column grid; sidebar becomes an off-canvas drawer */
+  .layout {
+    grid-template-columns: 1fr !important;
+    padding-top: calc(60px + env(safe-area-inset-top, 0px));
+  }
+
+  /* Sidebar slides in from the left as a drawer */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: min(var(--sidebar-w), 86vw);
+    height: 100dvh;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 14px 16px;
+    transform: translateX(-100%);
+    transition: transform .32s cubic-bezier(.2,.85,.2,1);
+    box-shadow: 24px 0 60px -10px rgba(0,8,40,.7);
+    z-index: 50;
+    border-right: 1px solid var(--glass-border);
+  }
+  .layout.drawer-open .sidebar { transform: translateX(0); }
+
+  /* Hamburger inside sidebar head becomes a close button visually (still toggles) */
+  .sidebar-head { padding-top: 4px; }
+  .brand-mini { opacity: 1 !important; width: auto !important; }
+
+  /* Restore tool-text visibility inside drawer even if .collapsed class is left on */
+  .layout .tool-text,
+  .layout .foot-link span { opacity: 1 !important; pointer-events: auto !important; }
+
+  /* Mobile top bar */
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: calc(60px + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) 14px 0;
+    background: linear-gradient(180deg, rgba(10,16,40,.88), rgba(10,16,40,.72));
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 30;
+  }
+  .mt-menu {
+    width: 42px; height: 42px;
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: #fff;
+  }
+  .mt-menu:active { transform: scale(.94); }
+  .mt-menu svg { width: 22px; height: 22px; }
+  .mt-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .mt-brand img {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(61,110,255,.4);
+  }
+  .mt-brand-name {
+    font-weight: 700;
+    font-size: 16px;
+    background: linear-gradient(90deg, #fff, #b9ccff);
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+    letter-spacing: -0.01em;
+  }
+
+  /* Main padding tuned for phones */
+  .main {
+    padding: 20px 16px calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Welcome page */
+  .page-home.active { min-height: calc(100dvh - 100px); }
+  .welcome-logo {
+    width: 132px; height: 132px;
+    border-radius: 28px;
+    margin-bottom: 20px;
+  }
+  .welcome-title { font-size: clamp(36px, 10vw, 52px); }
+  .welcome-greet { letter-spacing: 2px; font-size: 12px; }
+  .welcome-sub { font-size: 11.5px; letter-spacing: 2.2px; margin-bottom: 22px; }
+  .welcome-chips { gap: 8px; margin-bottom: 18px; }
+  .welcome-chip { padding: 8px 12px; font-size: 12.5px; }
+  .welcome-hint { font-size: 13px; }
+
+  /* Tool page headers stack tighter on mobile */
+  .page-head {
+    gap: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 16px;
+  }
+  .page-ico { width: 48px; height: 48px; border-radius: 13px; }
+  .page-ico svg { width: 22px; height: 22px; }
+  .page-head h2 { font-size: 20px; }
+  .page-head p { font-size: 13px; }
+
+  /* Larger touch targets for sidebar items in drawer */
+  .tool-link { padding: 12px; }
+  .tool-ico { width: 42px; height: 42px; }
+  .foot-link { padding: 12px; font-size: 14px; }
+
+  /* Smaller background blobs on mobile so they don't dominate */
+  .blob { width: 360px; height: 360px; filter: blur(70px); opacity: .35; }
+
+  /* Disable sidebar hover lift on touch (feels laggy) */
+  .tool-link:hover { transform: none; }
+}
+
+/* Extra-small phones */
+@media (max-width: 380px) {
+  .main { padding: 16px 12px calc(20px + env(safe-area-inset-bottom, 0px)); }
+  .welcome-logo { width: 112px; height: 112px; border-radius: 24px; }
+  .welcome-chip { padding: 7px 10px; font-size: 12px; }
+  .tool-cta { width: 100%; text-align: center; }
+  .tool-cta.big { width: 100%; }
+}
+
+/* Hide mobile topbar on desktop */
+@media (min-width: 901px) {
+  .mobile-topbar, .drawer-backdrop { display: none !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .blob, .welcome-logo, .page { animation: none; transition: none; }
+  .blob, .welcome-logo, .page, .sidebar { animation: none; transition: none; }
 }

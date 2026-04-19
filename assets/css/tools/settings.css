@@ -190,3 +190,18 @@
   transform: translate(-50%, 0);
   opacity: 1;
 }
+
+/* Mobile */
+@media (max-width: 600px) {
+  .set-grid { gap: 14px; grid-template-columns: 1fr; }
+  .set-card { padding: 16px 16px; border-radius: 16px; gap: 14px; }
+  .set-card-head { padding-bottom: 10px; gap: 10px; }
+  .set-card-head h3 { font-size: 13.5px; letter-spacing: .4px; }
+  .set-card-head .ico { width: 32px; height: 32px; border-radius: 9px; }
+  .set-card-head .ico svg { width: 16px; height: 16px; }
+  .seg { flex-wrap: wrap; }
+  .seg button { min-width: 70px; padding: 10px 10px; font-size: 13px; }
+  .swatch { width: 36px; height: 36px; border-radius: 10px; }
+  .set-select { padding: 12px 14px; padding-right: 36px; }
+  .set-toast { bottom: calc(18px + env(safe-area-inset-bottom, 0px)); font-size: 13px; padding: 10px 16px; }
+}
