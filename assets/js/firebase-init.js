@@ -20,12 +20,13 @@ import {
 // Put your real values here; these are public by design.
 // --------------------------------------------------------------------------
 const firebaseConfig = {
-  apiKey: window.GRAMMINO_FIREBASE?.apiKey     || "REPLACE_WITH_API_KEY",
+  apiKey: "AIzaSyBZMWIDUoq10U9G0t9hS4eEuJ9r0w5ivOM",
   authDomain: "gramminoweb.firebaseapp.com",
   projectId: "gramminoweb",
   storageBucket: "gramminoweb.firebasestorage.app",
-  messagingSenderId: window.GRAMMINO_FIREBASE?.messagingSenderId || "REPLACE_WITH_SENDER_ID",
-  appId: window.GRAMMINO_FIREBASE?.appId       || "REPLACE_WITH_APP_ID",
+  messagingSenderId: "225951959142",
+  appId: "1:225951959142:web:9eaa78d2d436dff14085a7",
+  measurementId: "G-TFYF10KLN4",
 };
 
 const app  = initializeApp(firebaseConfig);
